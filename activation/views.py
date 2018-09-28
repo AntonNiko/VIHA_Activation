@@ -8,6 +8,8 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 
 from .utils import *
+from .models import *
+import random
 
 # Create your views here.
 def index(request):
@@ -22,7 +24,7 @@ def dashboard(request):
         return redirect("/activation/login")
 
     ## Register user sccording to their class, and display relevant information
-    load_user(request)
+    user = load_user(request)
     
     context = {}
     return render(request, "activation/dashboard.html", context)
@@ -58,13 +60,21 @@ def actions(request):
     context = {}
     return render(request, "activation/actions.html", context)
 
-def respond_to_request(request, verify_id):
-    ## TODO: Verify that ID is valid
+def respond_to_request(request, activation_id, verify_id):
+    activation_obj = Activation_Message.objects.get(msg_id = activation_id)
+    if activation_obj.verify_id != verify_id:
+        return redirect("/activation/dashboard")
     
     context = {}
     return render(request, "activation/response_api.html", context)
 
 def response_handle(request):
+    ## Redirect user if not POST, since consistent with a form submission
+    if request.method != "POST":
+        return redirect("/activation/login")
+    if request.user.is_authenticated:
+        return redirect("/activation/dashboard")
+    
     return HttpResponse("Registered...")
 
 def send_activation(request):
@@ -73,13 +83,27 @@ def send_activation(request):
     region = post_data["region"]
     content = post_data["content"]
 
-
+    activation_id = random.randrange(10000)
+    verify_id = generate_verify_id()
     ## Register new Activation
-    
+    activation_obj = Activation_Message.objects.create(
+        msg_id = activation_id,
+        subject = subject,
+        region = post_data["region"],
+        content = content,
+        sent_date = timezone.now(),
+        sent_success = False,
+        verify_id = verify_id,
+        escalation_level = 0
+    )
+    activation_obj.save()
+
+
+    response_link = "<http://{}/activation/respond/{}/{}>".format(get_ip_address(), activation_id, verify_id)
     packet = {
         "email":"2508866514@msg.telus.com",
         "subject":subject,
-        "body":"Region: {}\n Content: {}".format(region,content)
+        "body":"Region: {}\n Content: {} \n To respond, follow link: {}".format(region,content,response_link)
     }
     send_email(packet)
     return redirect("/activation/actions/")

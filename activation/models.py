@@ -10,7 +10,7 @@ class User(models.Model):
     user_type = models.PositiveSmallIntegerField(choices = USER_TYPE_CHOICES)
 
     def __str__(self):
-        return str(user_id)+"-"+str(user_type)
+        return str(self.user_id)+"-"+str(self.user_type)
 
 class Activation_Message(models.Model):
     msg_id = models.IntegerField()
@@ -24,7 +24,7 @@ class Activation_Message(models.Model):
     escalation_level = models.IntegerField()
 
     def __str__(self):
-        return str(msg_id)+"-"+str(sent_date)
+        return str(self.msg_id)+"-"+str(self.sent_date)
 
 class Response_Message(models.Model):
     response_id = models.IntegerField()
@@ -32,18 +32,20 @@ class Response_Message(models.Model):
     location_coord = models.CharField(max_length=60)
 
     def __str__(self):
-        return str(response_id)+"-"+str(sent_date)
+        return str(self.response_id)+"-"+str(self.sent_date)
 
 class Nurse(models.Model):
     nurse_id = models.IntegerField()
     first_name = models.CharField(max_length=200, default="", null=True, blank=True)
     last_name = models.CharField(max_length=200, default="", null=True, blank=True)
+    phone_num = models.CharField(max_length=12)
+    phone_carrier = models.CharField(max_length=12)
     
     associated_activations = models.ManyToManyField(Activation_Message, related_name="assoc_activations")
     associated_responses = models.ManyToManyField(Response_Message, related_name="assoc_responses")
                                         
     def __str__(self):
-        return str(nurse_id)+"-"+str(first_name)+"-"+str(last_name)
+        return str(self.nurse_id)+"-"+str(self.first_name)+"-"+str(self.last_name)
 
 class Coordinator(models.Model):
     coordinator_id = models.IntegerField()
@@ -51,4 +53,4 @@ class Coordinator(models.Model):
     last_name = models.CharField(max_length=50)
 
     def __str__(self):
-        return "msg"
+        return str(self.coordinator_id)+"-"+str(self.first_name)+"-"+str(self.last_name)
