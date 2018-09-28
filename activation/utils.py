@@ -14,10 +14,3 @@ def send_email(packet):
 
     email = EmailMessage(subject, body, to=[email_addr])
     email.send()
-
-
-def load_email_host_password():
-    file = "pass.txt"
-    with open(file, "r") as f:
-        password = f.read()
-    return password
