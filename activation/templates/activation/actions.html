@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 	
-	<title>Dashboard</title>
+	<title>Actions</title>
 	
     <!-- Bootstrap Core CSS -->
     <link href="{% static 'activation/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -40,7 +40,7 @@
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
-			    <a class="btn btn-danger" href="/activation/actions/">Send Activation</a>
+			    <a class="btn btn-danger" href="#">Send Activation</a>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
@@ -249,7 +249,7 @@
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            <a href="/activation/dashboard"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>Activity<span class="fa arrow"></span></a>
@@ -307,107 +307,17 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Dashboard</h1>
+                    <h1 class="page-header">Actions</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-comments fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <div class="huge">4</div>
-                                    <div>New Activations</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-green">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-tasks fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <div class="huge">3</div>
-                                    <div>Responses</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-yellow">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-shopping-cart fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <div class="huge">13</div>
-                                    <div>On-call Nurses</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-red">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-support fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <div class="huge">1</div>
-                                    <div>Escalations</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-8">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-bar-chart-o fa-fw"></i> Area Chart Example
+                            <i class="fa fa-bar-chart-o fa-fw"></i>Send Activation
                             <div class="pull-right">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -430,7 +340,31 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <div id="morris-area-chart"></div>
+								<div class="col-12">
+							        <form role="form" action="/activation/send_activation/" method="POST">
+									{% csrf_token %}                         
+									<fieldset>
+									<div class="form-group">
+										<label>Region</label>
+										<select class="form-control" id="region" name="region">
+											<option id="A" name="A" value="A - PORT HARDY">A - PORT HARDY</option>
+											<option id="B" name="B" value="B - CAMPBELL RIVER">B - CAMPBELL RIVER</option>
+											<option id="C" name="C" value="C - NANAIMO">C - NANAIMO</option>
+											<option id="D" name="D" value="D - VICTORIA">D - VICTORIA</option>
+										</select>
+                                    </div>
+									<!--
+									<div class="form-group">
+										<input class="form-control" placeholder="Region" id="region" name="region" type="text" autofocus>
+									</div>-->
+									<div class="form-group">
+										<input class="form-control" placeholder="Content" id="content" name="content" type="text">
+									</div>
+									<!-- Change this to a button or input when using this as a form -->
+									<button type="submit" class="btn btn-md btn-danger btn-block" id="login_submit">SEND ACTIVATION</button>
+									</fieldset>
+									</form>					
+								</div>
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -460,6 +394,7 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
+                            <div class="row">
                                 <div class="col-12">
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-hover table-striped">
@@ -530,6 +465,8 @@
                                     <div id="morris-bar-chart"></div>
                                 </div>
                                 <!-- /.col-lg-8 (nested) -->
+                            </div>
+                            <!-- /.row -->
                         </div>
                         <!-- /.panel-body -->
                     </div>
