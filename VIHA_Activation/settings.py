@@ -25,7 +25,7 @@ SECRET_KEY = '%z50ay^tbaq2ytd(kvnzfazqx9_d4&2uog82ya7r@i_obrall5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -73,7 +73,8 @@ WSGI_APPLICATION = 'VIHA_Activation.wsgi.application'
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = "ant.nikitenko@gmail.com"
-EMAIL_HOST_PASSWORD = "PASSWORD"
+
+EMAIL_HOST_PASSWORD = "PASS"
 EMAIL_PORT = 587
 
 # Database
