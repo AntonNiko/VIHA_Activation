@@ -22,7 +22,20 @@
 
     <!-- Custom Fonts -->
     <link href="{% static 'activation/vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
-
+	<script>
+	function loadInfo() {
+	  var xhttp = new XMLHttpRequest();
+	  xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+		  console.log(this.responseText);
+		}else{
+		  console.log("stupid...");
+		}
+	  };
+	  xhttp.open("GET", "/activation/ajax_info.txt", true);
+	  xhttp.send();
+	}
+	</script>
 </head>
 <body>
 <div id="wrapper">
@@ -795,6 +808,9 @@
     <script src="{% static 'activation/vendor/raphael/raphael.min.js' %}"></script>
     <script src="{% static 'activation/vendor/morrisjs/morris.min.js' %}"></script>
     <!--<script src="{% static '../data/morris-data.js"></script>-->
+	<script>
+		loadInfo();
+	</script>
 </div>
 
 </body>

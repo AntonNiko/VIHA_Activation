@@ -13,9 +13,6 @@ import random
 
 # Create your views here.
 def index(request):
-    u = Nurse.objects.get(nurse_id=34)
-    print(u.phone_carrier,type(u.phone_carrier))
-    
     if request.user.is_authenticated:
         return redirect("/activation/dashboard")
     
@@ -69,7 +66,7 @@ def respond_to_request(request, activation_id, verify_id):
     return render(request, "activation/response_api.html", context)
 
 def response_handle(request, verify_id):
-    ## Redirect user if not POST, since consistent with a form submission
+    ## Redirect user if not POST, since consistent with form submission
     if request.method != "POST":
         return redirect("/activation/login")
     if request.user.is_authenticated:
@@ -133,6 +130,8 @@ def send_activation(request):
         print("Sent to email: {}".format(email))
         send_email(packet)
     return redirect("/activation/actions/")
+
+
 
 def logout_user(request):
     logout(request)
