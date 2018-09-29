@@ -101,7 +101,7 @@ def send_activation(request):
 
     response_link = "<http://{}/activation/respond/{}/{}>".format(get_ip_address(), activation_id, verify_id)
     packet = {
-        "email":"2508866514@msg.telus.com",
+        "email":"{}@msg.telus.com".format(content),
         "subject":subject,
         "body":"Region: {}\n Content: {} \n To respond, follow link: {}".format(region,content,response_link)
     }

@@ -72,7 +72,7 @@ WSGI_APPLICATION = 'VIHA_Activation.wsgi.application'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = "ant.nikitenko@gmail.com"
+EMAIL_HOST_USER = "vihaactivation@gmail.com"
 
 EMAIL_HOST_PASSWORD = "PASS"
 EMAIL_PORT = 587
