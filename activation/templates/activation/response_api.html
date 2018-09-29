@@ -341,20 +341,25 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
 							<div class="col-12">
-								<form role="form" action="/activation/respond_response/" method="POST">
+								<form role="form" action="/activation/respond_response/{{ verify_id }}" method="POST">
 									{% csrf_token %}                         
 									<fieldset>
 									<div class="form-group">
 										<label>Accept</label>
 										<button type="submit" class="btn btn-md btn-success btn-block" id="activation_responding" name="activation_responding">RESPOND</button>
 									</div>
+									</fieldset>
+								</form>	
+								<form role="form" action="/activation/respond_response/{{ verify_id }}" method="POST">
+									{% csrf_token %}                         
+									<fieldset>
 									<div class="form-group">
 										<label>Warn: Reason for no response will be investigated</label>
 										<input class="form-control" id="activation_warning" name="activation_warning" type="text" placeholder="Provide probably summary">
 										<button type="submit" class="btn btn-md btn-warning btn-block" id="login_submit">PROBLEM</button><br>
 									</div>
 									</fieldset>
-								</form>					
+								</form>									
 							</div>
                         </div>
                     </div>

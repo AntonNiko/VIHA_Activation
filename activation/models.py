@@ -1,17 +1,6 @@
 from django.db import models
 
 # Create your models here.
-class User(models.Model):
-    USER_TYPE_CHOICES = (
-        (1, "Nurse"),
-        (2, "Coordinator"),
-    )
-    user_id = models.CharField(max_length=50)
-    user_type = models.PositiveSmallIntegerField(choices = USER_TYPE_CHOICES)
-
-    def __str__(self):
-        return str(self.user_id)+"-"+str(self.user_type)
-
 class Activation_Message(models.Model):
     msg_id = models.IntegerField()
     subject = models.CharField(max_length=200)
@@ -28,8 +17,11 @@ class Activation_Message(models.Model):
 
 class Response_Message(models.Model):
     response_id = models.IntegerField()
+    activation = models.ManyToManyField(Activation_Message, related_name="activation")
     sent_date = models.DateTimeField("Time sent")
     location_coord = models.CharField(max_length=60)
+    response_success = models.BooleanField("Response Success", default=False)
+    response_message = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return str(self.response_id)+"-"+str(self.sent_date)
@@ -58,14 +50,6 @@ class Nurse(models.Model):
     def __str__(self):
         return str(self.nurse_id)+"-"+str(self.first_name)+"-"+str(self.last_name)
 
-class Coordinator(models.Model):
-    coordinator_id = models.IntegerField()
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return str(self.coordinator_id)+"-"+str(self.first_name)+"-"+str(self.last_name)
-
 class Schedule(models.Model):
     shift_id = models.IntegerField()
     nurse = models.ManyToManyField(Nurse, related_name="nurse")
@@ -73,4 +57,4 @@ class Schedule(models.Model):
     end_time = models.DateTimeField("Shift end")
 
     def __str__(self):
-        return str(self.shift_id)+"-"+str(self.nurse)+"-"+str(self.start_time)+"-"+str(self.end_time)
+        return str(self.shift_id)+"-"+str(list(self.nurse.all())[0])+"-"+str(self.start_time)+"-"+str(self.end_time)

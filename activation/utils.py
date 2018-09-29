@@ -7,14 +7,6 @@ import random
 import string
 import socket
 
-def load_user(request):
-    if not request.user.is_authenticated:
-        return redirect("/activation/login")
-
-    print(request.user.username)
-    user = User.objects.get(user_id = request.user.username)
-    print(user.user_type)
-
 def get_on_call_nurses():
     """
     Function which returns a dicitionary of phone number keys, and carrier values
@@ -35,7 +27,7 @@ def get_sms_email(on_call):
         "Rogers": "pcs.rogers.com",
         "Bell": "txt.bell.ca",
         "Fido": "fido.ca",
-        "Koodo": "msg.koodomobile.co,",
+        "Koodo": "msg.koodomobile.com,",
         "Virgin": "vmobile.ca",
         "Chatr": "pcs.rogers.com"
     }
@@ -43,7 +35,6 @@ def get_sms_email(on_call):
     emails = []
     for number in on_call:
         emails.append("{}@{}".format(number, CARRIER_DOMAINS[on_call[number]]))
-    print(emails)
     return emails
     
 def send_email(packet):

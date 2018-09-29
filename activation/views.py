@@ -25,9 +25,6 @@ def index(request):
 def dashboard(request):
     if not request.user.is_authenticated:
         return redirect("/activation/login")
-
-    ## Register user sccording to their class, and display relevant information
-    user = load_user(request)
     
     context = {}
     return render(request, "activation/dashboard.html", context)
@@ -68,17 +65,38 @@ def respond_to_request(request, activation_id, verify_id):
     if activation_obj.verify_id != verify_id:
         return redirect("/activation/dashboard")
     
-    context = {}
+    context = {"verify_id":verify_id}
     return render(request, "activation/response_api.html", context)
 
-def response_handle(request):
+def response_handle(request, verify_id):
     ## Redirect user if not POST, since consistent with a form submission
     if request.method != "POST":
         return redirect("/activation/login")
     if request.user.is_authenticated:
         return redirect("/activation/dashboard")
-    
-    return HttpResponse("Registered...")
+
+    post_data = dict(request.POST.items())
+    if "activation_responding" in list(post_data.keys()):
+        response_obj = Response_Message.objects.create(
+            response_id = random.randrange(10000),
+            sent_date = timezone.now(),
+            location_coord = "NA",
+            response_success = True
+        )
+        response_obj.save()
+        response_obj.activation.add(Activation_Message.objects.get(verify_id=verify_id))
+    elif "activation_warning" in list(post_data.keys()):
+        response_obj = Response_Message.objects.create(
+            response_id = random.randrange(10000),
+            sent_date = timezone.now(),
+            location_coord = "NA",
+            response_success = False,
+            response_message = post_data["activation_warning"]
+        )
+        response_obj.save()
+        response_obj.activation.add(Activation_Message.objects.get(verify_id=verify_id))
+    ## Generate Reponse_Message object that will link to Activation_Message object
+    return redirect("/activation/dashboard")
 
 def send_activation(request):
     post_data = dict(request.POST.items())
@@ -94,13 +112,12 @@ def send_activation(request):
         subject = subject,
         region = post_data["region"],
         content = content,
-        sent_date = timezone.now(),
+        sent_date = timezone.now(), ## Current time which activation was sent
         sent_success = False,
         verify_id = verify_id,
         escalation_level = 0
     )
     activation_obj.save()
-
 
     ## Fetch on-call nurses
     on_call_emails = get_sms_email(get_on_call_nurses())
