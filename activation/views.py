@@ -13,6 +13,9 @@ import random
 
 # Create your views here.
 def index(request):
+    u = Nurse.objects.get(nurse_id=34)
+    print(u.phone_carrier,type(u.phone_carrier))
+    
     if request.user.is_authenticated:
         return redirect("/activation/dashboard")
     
@@ -85,7 +88,7 @@ def send_activation(request):
 
     activation_id = random.randrange(10000)
     verify_id = generate_verify_id()
-    ## Register new Activation
+    ## Register new Activation object to database
     activation_obj = Activation_Message.objects.create(
         msg_id = activation_id,
         subject = subject,
@@ -99,13 +102,19 @@ def send_activation(request):
     activation_obj.save()
 
 
+    ## Fetch on-call nurses
+    on_call_emails = get_sms_email(get_on_call_nurses())
+    ## Create link for nurses to follow to respond to activation
     response_link = "<http://{}/activation/respond/{}/{}>".format(get_ip_address(), activation_id, verify_id)
-    packet = {
-        "email":"{}@msg.telus.com".format(content),
-        "subject":subject,
-        "body":"Region: {}\n Content: {} \n To respond, follow link: {}".format(region,content,response_link)
-    }
-    send_email(packet)
+
+    for email in on_call_emails:
+        packet = {
+            "email":email,
+            "subject":content,
+            "body":"Region: {}\n Content: {} \n To respond, follow link: {}".format(region, content, response_link)
+        }
+        print("Sent to email: {}".format(email))
+        send_email(packet)
     return redirect("/activation/actions/")
 
 def logout_user(request):

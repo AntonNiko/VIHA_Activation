@@ -1,6 +1,8 @@
-from .models import User, Activation_Message, Response_Message, Nurse, Coordinator
+from .models import *
+from datetime import datetime
 from django.db.models import Q
 from django.core.mail import EmailMessage, BadHeaderError, send_mail
+from django.utils import timezone
 import random
 import string
 import socket
@@ -12,6 +14,37 @@ def load_user(request):
     print(request.user.username)
     user = User.objects.get(user_id = request.user.username)
     print(user.user_type)
+
+def get_on_call_nurses():
+    """
+    Function which returns a dicitionary of phone number keys, and carrier values
+    """
+    on_call = {}
+    nurses = Nurse.objects.all()
+    schedules = Schedule.objects.all()
+
+    for s in schedules:
+        if timezone.now() > s.start_time and timezone.now() < s.end_time:
+            nurse = list(s.nurse.all())[0]
+            on_call[nurse.phone_num] =  nurse.get_phone_carrier_display()
+    return on_call
+
+def get_sms_email(on_call):
+    CARRIER_DOMAINS = {
+        "Telus" : "msg.telus.com",
+        "Rogers": "pcs.rogers.com",
+        "Bell": "txt.bell.ca",
+        "Fido": "fido.ca",
+        "Koodo": "msg.koodomobile.co,",
+        "Virgin": "vmobile.ca",
+        "Chatr": "pcs.rogers.com"
+    }
+
+    emails = []
+    for number in on_call:
+        emails.append("{}@{}".format(number, CARRIER_DOMAINS[on_call[number]]))
+    print(emails)
+    return emails
     
 def send_email(packet):
     email_addr = packet["email"]
